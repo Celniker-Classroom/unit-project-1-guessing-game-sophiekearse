@@ -18,7 +18,7 @@ document.getElementById("playBtn").addEventListener("click", function() {
     let range = 3;
     for (let i = 0; i < radios.length; i++){
         if(radios[i].checked) {
-            range  = parseint(radios[i].value);
+            range  = parseInt(radios[i].value);
         }
     }
 
@@ -33,7 +33,7 @@ document.getElementById("giveUpBtn").disabled = false;
 document.getElementById("playBtn").disabled = true;
 
 let levelRadios = document.getElementsByName("level");
-for (let i = 0; i < radios.length; i++) {
+for (let i = 0; i < levelRadios.length; i++) {
     levelRadios[i].disabled = true;
 }
 
