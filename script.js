@@ -23,7 +23,8 @@ document.getElementById("playBtn").addEventListener("click", function() {
     }
 
 //pick answer
-let answer = Math.floor(Math.random() * range) + 1;
+answer = Math.floor(Math.random() * range) + 1;
+guessCount = 0;
 
 //disable and enable buttons and radio choices
 document.getElementById("msg").textContent = playerName + ", guess a number between 1 and " + range;
@@ -42,37 +43,74 @@ for (let i = 0; i < levelRadios.length; i++) {
 
 //guessing
 document.getElementById("guessBtn").addEventListener("click", function() {
-let guess = Number(document.getElementById("guess").value);
-let temp = "";
+let input = Number(document.getElementById("guess").value);
+let num = parseInt(input);
+if (isNaN(num)) {
+    document.getElementById("msg").textContent = "Please enter a valid number!";
+    return;
+}
+guessCount++;
+let diff = Math.abs(num - answer);
 
-if (Math.abs(guess - answer) <= 2) {
-            temp = "hot"; 
-}       else if (Math.abs(guess - answer) <= 5) {
-                    temp = "warm";
+if (num === answer){
+    document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
+    updateScore(guessCount);
+resetButtons(); //stop buttons
+}
+else if (num > answer) {
+    let temp = "";
+    if (diff <= 2) {
+            temp = "Hot!"; 
+}       else if (diff <= 5) {
+                    temp = "Warm!";
              } else {
-                    temp = "cold";
+                    temp = "Cold!";
              }
 
-if (guess > answer) {
-    document.getElementById("msg").innerText = "Too high, " + temp;
+    document.getElementById("msg").textContent = "Too high. " + temp;
     
-} else if (guess < answer) {
-        document.getElementById("msg").innerText = "Too low, " + temp;
+} else {
+      if (diff <= 2) {
+            temp = "Hot!"; 
+}       else if (diff <= 5) {
+                    temp = "Warm!";
+             } else {
+                    temp = "Cold!";
+             }
+        document.getElementById("msg").textContent = "Too low. " + temp;
         }
-        else {
-            document.getElementById("msg").innerText = "Correct! The answer was " + answer;
-            totalWins++;
-            totalGuesses += guessCount + 1;
-            scores = totalWins / totalGuesses;
-            document.getElementById("score").innerText = "Score: " + scores.toFixed(2);
-            document.getElementById("guessBtn").disabled = true;
-            document.getElementById("giveUpBtn").disabled = true;
-            document.getElementById("playBtn").disabled = false;
-
-            let levelRadios = document.getElementsByName("level");
-            for (let i = 0; i < levelRadios.length; i++) {
-                levelRadios[i].disabled = false;
-            }
-        }
-
+        
     });
+
+//update score when win
+function updateScore(score) {
+    totalWins++;
+    totalGuesses += score;
+    //score for round & average
+    document.getElementById("wins").textContent = "Total wins: " + totalWins;
+    document.getElementById("avgScore").textContent = "Average Score: " + (totalGuesses / totalWins).toFixed(2);
+
+    //update leader game
+    scores.push(score);
+    scores.sort(function(a,b){return a-b;});
+
+    let leaderboard = document.getElementsByName("leaderboard");
+    for (let i = 0; i < leaderboard.length; i++) {
+        if (i < scores.length) {
+            leaderboard[i].textContent = scores[i];
+        } else {
+            leaderboard[i].textContent = "--";
+        }
+    }
+}
+
+function resetButtons() {
+    document.getElementById("guessBtn").disabled = true;
+    document.getElementById("giveUpBtn").disabled = true;
+    document.getElementById("playBtn").disabled = false;
+
+    let levelRadios = document.getElementsByName("level");
+    for (let i = 0; i < levelRadios.length; i++) {
+    levelRadios[i].disabled = false;
+}
+}
