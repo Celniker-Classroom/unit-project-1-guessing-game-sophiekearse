@@ -39,6 +39,7 @@ let levelRadios = document.getElementsByName("level");
 for (let i = 0; i < levelRadios.length; i++) {
     levelRadios[i].disabled = true;
 }
+startTimer();
 
 });
 
@@ -58,6 +59,7 @@ if (num === answer){
     document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
     updateScore(guessCount);
     resetButtons(); //stop buttons
+    stopTimer();
 }
 else if (num > answer) {
     let temp = "";
@@ -126,19 +128,48 @@ document.getElementById("giveUpBtn").addEventListener("click", function() {
 });
 
 //date
-document.getElementById("date").textContent = "Date: " + new Date().toLocaleDateString();
-
-
-
-//timer
-let intervalId = setInterval(updateTimer, 10);
-let startTime = new Date().getTime();
-
-function updateTimer() {
-    let now = new Date().getTime();
-    let elapsed = (now - startTime) / 1000;
-    let myTimerElem = document.getElementById("date");
-    if (myTimerElem) {
-        myTimerElem.textContent = elapsed.toFixed(2);
+let now = new Date();
+let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+let month = months[now.getMonth()];
+let day = now.getDate();
+let year = now.getFullYear();
+let suffix = "";
+if (day % 10 === 1 && day !== 11) {
+    suffix = "st";
+} else if (day % 10 === 2 && day !== 12) {
+    suffix = "nd";
+} else if (day % 10 === 3 && day !== 13) {
+    suffix = "rd";
+}   else {
+    suffix = "th";  
     }
+
+
+
+
+let formattedDate = month + " " + day + suffix + ", " + year;
+document.getElementById("date").textContent = "Date: " + formattedDate + " | Time: " + now.toLocaleTimeString(); 
+
+
+// //timer
+  let startTime = new Date().getTime(); 
+function startTimer() {
+    console.log(startTime);
 }
+
+let running = true
+function stopTimer() {
+    let endTime = new Date().getTime();
+    let elapsed = (endTime - startTime) / 1000;
+    document.getElementById("fastest").textContent = "Fastest Game: " + elapsed.toFixed(2) + " seconds";
+}
+
+
+    
+
+
+
+
+
+
+
