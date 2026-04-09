@@ -4,10 +4,12 @@ let answer = 0;
 let guessCount = 0;
 let totalWins = 0;
 let totalGuesses = 0;
-let scores = 0;
+let scores = [];
+let range = 3;
 
 //player name
 let playerName = prompt("Enter your name:");
+playerName = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
 
 //play
 
@@ -15,7 +17,7 @@ let playerName = prompt("Enter your name:");
 //get level
 document.getElementById("playBtn").addEventListener("click", function() {
     let radios = document.getElementsByName("level");
-    let range = 3;
+    range = 3;
     for (let i = 0; i < radios.length; i++){
         if(radios[i].checked) {
             range  = parseInt(radios[i].value);
@@ -55,7 +57,7 @@ let diff = Math.abs(num - answer);
 if (num === answer){
     document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
     updateScore(guessCount);
-resetButtons(); //stop buttons
+    resetButtons(); //stop buttons
 }
 else if (num > answer) {
     let temp = "";
@@ -113,4 +115,30 @@ function resetButtons() {
     for (let i = 0; i < levelRadios.length; i++) {
     levelRadios[i].disabled = false;
 }
+
+}
+
+//give up
+document.getElementById("giveUpBtn").addEventListener("click", function() {
+    document.getElementById("msg").textContent = "The correct answer was " + answer + ". Better luck next time, " + playerName + "!";
+    resetButtons();
+    updateScore(range);
+});
+
+//date
+document.getElementById("date").textContent = "Date: " + new Date().toLocaleDateString();
+
+
+
+//timer
+let intervalId = setInterval(updateTimer, 10);
+let startTime = new Date().getTime();
+
+function updateTimer() {
+    let now = new Date().getTime();
+    let elapsed = (now - startTime) / 1000;
+    let myTimerElem = document.getElementById("date");
+    if (myTimerElem) {
+        myTimerElem.textContent = elapsed.toFixed(2);
+    }
 }
