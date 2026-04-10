@@ -6,6 +6,10 @@ let totalWins = 0;
 let totalGuesses = 0;
 let scores = [];
 let range = 3;
+let startTime;
+let totalTime = 0;
+let fastestTime = null;
+let roundsPlayed = 0;
 
 //player name
 let playerName = prompt("Enter your name:");
@@ -125,9 +129,11 @@ document.getElementById("giveUpBtn").addEventListener("click", function() {
     document.getElementById("msg").textContent = "The correct answer was " + answer + ". Better luck next time, " + playerName + "!";
     resetButtons();
     updateScore(range);
+    stopTimer();
 });
 
 //date
+setInterval(function() {
 let now = new Date();
 let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 let month = months[now.getMonth()];
@@ -143,25 +149,38 @@ if (day % 10 === 1 && day !== 11) {
 }   else {
     suffix = "th";  
     }
+  let time = now.toLocaleTimeString();
+
+    let formattedDate = month + " " + day + suffix + ", " + year;
+
+    document.getElementById("date").textContent =
+        "Date: " + formattedDate + " | Time: " + time;
 
 
+}, 1000);
 
-
-let formattedDate = month + " " + day + suffix + ", " + year;
-document.getElementById("date").textContent = "Date: " + formattedDate + " | Time: " + now.toLocaleTimeString(); 
 
 
 // //timer
-  let startTime = new Date().getTime(); 
-function startTimer() {
-    console.log(startTime);
+ function startTimer() {
+    startTime = new Date().getTime(); 
 }
+
 
 let running = true
 function stopTimer() {
     let endTime = new Date().getTime();
     let elapsed = (endTime - startTime) / 1000;
-    document.getElementById("fastest").textContent = "Fastest Game: " + elapsed.toFixed(2) + " seconds";
+
+    totalTime += elapsed;
+    roundsPlayed++;
+
+    if (fastestTime === null || elapsed < fastestTime) {
+        fastestTime = elapsed;
+    }
+    document.getElementById("fastest").textContent = "Fastest Game: " + fastestTime.toFixed(2) + " seconds";
+
+    document.getElementById("avgTime").textContent = "Average Time: " + (totalTime / roundsPlayed).toFixed(2) + " seconds";
 }
 
 
